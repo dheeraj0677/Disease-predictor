@@ -374,7 +374,7 @@ def main():
     if not os.path.exists(diabetes_csv):
         print("\n📊 Datasets not found. Generating...")
         # Import and run dataset generator
-        sys.path.insert(0, os.path.join(config.BASE_DIR, "data"))
+        sys.path.insert(0, os.path.join(config.BASE_DIR, "core"))
         from download_datasets import (
             create_diabetes_dataset,
             create_heart_dataset,
