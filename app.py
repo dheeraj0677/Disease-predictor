@@ -35,9 +35,9 @@ from flask import (
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import config
-from database.db import init_db, save_prediction, get_prediction_by_id, get_all_predictions, get_stats
-from explainability.shap_explain import generate_waterfall_plot, generate_summary_plot
-from explainability.lime_explain import generate_lime_explanation
+from core.db import init_db, save_prediction, get_prediction_by_id, get_all_predictions, get_stats
+from core.shap_explain import generate_waterfall_plot, generate_summary_plot
+from core.lime_explain import generate_lime_explanation
 
 # ─── Flask App Setup ─────────────────────────────────────────────
 app = Flask(__name__)

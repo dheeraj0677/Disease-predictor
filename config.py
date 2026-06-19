@@ -9,10 +9,11 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # ─── Data & Model Paths ─────────────────────────────────────────
-DATA_DIR = os.path.join(BASE_DIR, "data")
-MODELS_DIR = os.path.join(BASE_DIR, "models")
+STORAGE_DIR = os.path.join(BASE_DIR, "storage")
+DATA_DIR = STORAGE_DIR
+MODELS_DIR = STORAGE_DIR
 CHARTS_DIR = os.path.join(BASE_DIR, "static", "charts")
-DATABASE_DIR = os.path.join(BASE_DIR, "database")
+DATABASE_DIR = STORAGE_DIR
 DATABASE_PATH = os.path.join(DATABASE_DIR, "predictions.db")
 
 # ─── Supported Diseases ─────────────────────────────────────────
@@ -63,5 +64,5 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key-change-in-production")
 DEBUG = os.environ.get("FLASK_DEBUG", "true").lower() == "true"
 
 # ─── Ensure directories exist ───────────────────────────────────
-for d in [DATA_DIR, MODELS_DIR, CHARTS_DIR, DATABASE_DIR]:
+for d in [STORAGE_DIR, CHARTS_DIR]:
     os.makedirs(d, exist_ok=True)
