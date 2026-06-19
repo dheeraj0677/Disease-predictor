@@ -5,7 +5,7 @@
 {% block content %}
 <!-- ─── Page Header ────────────────────────────────────── -->
 <div class="page-header">
-    <h1>🧬 Disease Prediction System</h1>
+    <h1 class="gradient-text">🧬 Disease Prediction System</h1>
     <p>Enter patient data to receive AI-powered disease predictions with explainable insights using SHAP and LIME</p>
 </div>
 
@@ -38,7 +38,7 @@
 
             <div class="form-grid">
                 {% for field in defn.fields %}
-                <div class="form-group">
+                <div class="form-group stagger-fade" style="animation-delay: {{ loop.index0 * 0.05 }}s;">
                     <label class="form-label" for="{{ key }}-{{ field.name }}">
                         {{ field.label }}
                         <span class="tooltip-icon" title="{{ field.tooltip }}">?</span>
