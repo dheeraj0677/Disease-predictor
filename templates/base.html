@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Disease Prediction System with AI-powered explainability. Get predictions for diabetes, heart disease, kidney disease, and liver disease with SHAP and LIME explanations.">
+    <title>{% block title %}Disease Prediction System{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Plotly for dashboard charts -->
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- ─── Navigation ─────────────────────────────────── -->
+        <nav class="navbar">
+            <div class="container">
+                <a href="{{ url_for('index') }}" class="navbar-brand">
+                    <span class="brand-icon">🧬</span>
+                    <span>MedPredict AI</span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">🏠 Predict</a></li>
+                    <li><a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}active{% endif %}">📊 Dashboard</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- ─── Flash Messages ─────────────────────────────── -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages" id="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-msg {{ category }}">
+                            {% if category == 'error' %}⚠️{% elif category == 'success' %}✅{% else %}ℹ️{% endif %}
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- ─── Main Content ───────────────────────────────── -->
+        <main class="main-content">
+            <div class="container">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+
+        <!-- ─── Footer ─────────────────────────────────────── -->
+        <footer class="footer">
+            <div class="container">
+                <p>🧬 MedPredict AI — Disease Prediction System with Explainability</p>
+                <p style="margin-top: 4px; font-size: 0.75rem;">Powered by XGBoost, SHAP & LIME | For research purposes only</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% block scripts %}{% endblock %}
+
+    <!-- Auto-dismiss flash messages -->
+    <script>
+        setTimeout(() => {
+            const flashEl = document.getElementById('flash-messages');
+            if (flashEl) {
+                flashEl.style.transition = 'opacity 0.5s ease';
+                flashEl.style.opacity = '0';
+                setTimeout(() => flashEl.remove(), 500);
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

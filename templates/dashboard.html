@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}Doctor Dashboard — MedPredict AI{% endblock %}
+
+{% block content %}
+<!-- ─── Page Header ────────────────────────────────────── -->
+<div class="page-header">
+    <h1>📊 Doctor Dashboard</h1>
+    <p>Overview of all predictions, analytics, and patient insights</p>
+</div>
+
+<!-- ─── Stats Cards ────────────────────────────────────── -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon blue">📋</div>
+        <div class="stat-content">
+            <div class="stat-value">{{ stats.total_predictions }}</div>
+            <div class="stat-label">Total Predictions</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon green">📈</div>
+        <div class="stat-content">
+            <div class="stat-value">{{ (stats.avg_confidence * 100)|round(1) }}%</div>
+            <div class="stat-label">Average Confidence</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon purple">🏥</div>
+        <div class="stat-content">
+            <div class="stat-value">{{ stats.disease_distribution|length }}</div>
+            <div class="stat-label">Disease Types Tested</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon orange">⚠️</div>
+        <div class="stat-content">
+            <div class="stat-value">{{ stats.risk_distribution.get('High', 0) }}</div>
+            <div class="stat-label">High Risk Predictions</div>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Charts ─────────────────────────────────────────── -->
+<div class="charts-grid">
+    <div class="chart-container">
+        <h3>Disease Distribution</h3>
+        <div id="disease-pie-chart"></div>
+    </div>
+    <div class="chart-container">
+        <h3>Risk Level Breakdown</h3>
+        <div id="risk-pie-chart"></div>
+    </div>
+</div>
+
+<!-- ─── Filters ────────────────────────────────────────── -->
+<form class="filter-bar" method="GET" action="{{ url_for('dashboard') }}" id="filter-form">
+    <span style="color: var(--text-secondary); font-weight: 600; font-size: 0.85rem;">🔍 Filters</span>
+
+    <select name="disease_type" class="form-select" id="filter-disease">
+        <option value="">All Diseases</option>
+        {% for key, info in diseases.items() %}
+        <option value="{{ key }}" {% if filters.disease_type == key %}selected{% endif %}>
+            {{ info.display_name }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <select name="prediction" class="form-select" id="filter-prediction">
+        <option value="">All Outcomes</option>
+        {% for key, info in diseases.items() %}
+        <option value="{{ info.positive_label }}" {% if filters.prediction == info.positive_label %}selected{% endif %}>
+            {{ info.positive_label }}
+        </option>
+        <option value="{{ info.negative_label }}" {% if filters.prediction == info.negative_label %}selected{% endif %}>
+            {{ info.negative_label }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <input type="date" name="date_from" class="form-input" value="{{ filters.date_from }}" placeholder="From Date" id="filter-date-from">
+    <input type="date" name="date_to" class="form-input" value="{{ filters.date_to }}" placeholder="To Date" id="filter-date-to">
+
+    <button type="submit" class="btn btn-primary btn-sm">Apply</button>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-outline btn-sm">Clear</a>
+    <a href="{{ url_for('export_csv') }}" class="btn btn-outline btn-sm" style="margin-left: auto;">📥 Export CSV</a>
+</form>
+
+<!-- ─── Predictions Table ──────────────────────────────── -->
+<div class="data-table-wrapper">
+    {% if predictions|length > 0 %}
+    <table class="data-table" id="predictions-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Timestamp</th>
+                <th>Disease</th>
+                <th>Age</th>
+                <th>Prediction</th>
+                <th>Confidence</th>
+                <th>Risk</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pred in predictions %}
+            <tr>
+                <td style="font-family: var(--font-mono);">#{{ pred.id }}</td>
+                <td>{{ pred.timestamp[:16] if pred.timestamp else '—' }}</td>
+                <td>
+                    <span class="disease-badge {{ pred.disease_type }}">
+                        {{ diseases[pred.disease_type].display_name if pred.disease_type in diseases else pred.disease_type }}
+                    </span>
+                </td>
+                <td>{{ pred.patient_age or '—' }}</td>
+                <td style="font-weight: 600;">{{ pred.prediction }}</td>
+                <td style="font-family: var(--font-mono);">
+                    {{ (pred.confidence * 100)|round(1) }}%
+                </td>
+                <td>
+                    <span class="risk-badge {{ pred.risk_level|lower }}">
+                        {{ pred.risk_level }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ url_for('result', pred_id=pred.id) }}" class="btn btn-outline btn-sm" title="View full result">
+                        🔍 View
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <h3>No Predictions Yet</h3>
+        <p style="margin-top: 0.5rem;">Start by making your first disease prediction.</p>
+        <a href="{{ url_for('index') }}" class="btn btn-primary" style="margin-top: 1rem;">
+            🔍 Make a Prediction
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- ─── Detail Modal ───────────────────────────────────── -->
+<div class="modal-overlay" id="detail-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="modal-title">Prediction Details</h3>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div id="modal-body">
+            <!-- Loaded dynamically -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ─── Disease Distribution Pie Chart ──────────────────
+    const diseaseData = {{ stats.disease_distribution | tojson }};
+    const diseaseLabels = Object.keys(diseaseData).map(k => {
+        const nameMap = {
+            'diabetes': 'Diabetes',
+            'heart': 'Heart Disease',
+            'kidney': 'Kidney Disease',
+            'liver': 'Liver Disease'
+        };
+        return nameMap[k] || k;
+    });
+    const diseaseValues = Object.values(diseaseData);
+
+    if (diseaseValues.length > 0) {
+        Plotly.newPlot('disease-pie-chart', [{
+            type: 'pie',
+            labels: diseaseLabels,
+            values: diseaseValues,
+            hole: 0.45,
+            marker: {
+                colors: ['#ec4899', '#ef4444', '#f59e0b', '#8b5cf6']
+            },
+            textfont: { color: '#f0f4f8', size: 13 },
+            hoverlabel: { bgcolor: '#1a2332', font: { color: '#f0f4f8' } }
+        }], {
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: '#94a3b8' },
+            margin: { t: 20, b: 20, l: 20, r: 20 },
+            showlegend: true,
+            legend: { font: { color: '#94a3b8' } }
+        }, { responsive: true, displayModeBar: false });
+    } else {
+        document.getElementById('disease-pie-chart').innerHTML =
+            '<div class="empty-state" style="padding:2rem"><p>No data yet</p></div>';
+    }
+
+    // ─── Risk Level Pie Chart ────────────────────────────
+    const riskData = {{ stats.risk_distribution | tojson }};
+    const riskLabels = Object.keys(riskData);
+    const riskValues = Object.values(riskData);
+
+    if (riskValues.length > 0) {
+        Plotly.newPlot('risk-pie-chart', [{
+            type: 'pie',
+            labels: riskLabels,
+            values: riskValues,
+            hole: 0.45,
+            marker: {
+                colors: riskLabels.map(l => {
+                    if (l === 'Low') return '#10b981';
+                    if (l === 'Medium') return '#f59e0b';
+                    return '#ef4444';
+                })
+            },
+            textfont: { color: '#f0f4f8', size: 13 },
+            hoverlabel: { bgcolor: '#1a2332', font: { color: '#f0f4f8' } }
+        }], {
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { color: '#94a3b8' },
+            margin: { t: 20, b: 20, l: 20, r: 20 },
+            showlegend: true,
+            legend: { font: { color: '#94a3b8' } }
+        }, { responsive: true, displayModeBar: false });
+    } else {
+        document.getElementById('risk-pie-chart').innerHTML =
+            '<div class="empty-state" style="padding:2rem"><p>No data yet</p></div>';
+    }
+});
+
+// ─── Modal functions ─────────────────────────────────────
+function closeModal() {
+    document.getElementById('detail-modal').classList.remove('active');
+}
+
+document.getElementById('detail-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+});
+</script>
+{% endblock %}

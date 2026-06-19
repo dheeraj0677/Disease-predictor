@@ -1,0 +1,101 @@
+{
+  "disease_key": "liver",
+  "model_name": "Random Forest",
+  "feature_names": [
+    "Age",
+    "Gender",
+    "Total_Bilirubin",
+    "Direct_Bilirubin",
+    "Alkaline_Phosphotase",
+    "Alamine_Aminotransferase",
+    "Aspartate_Aminotransferase",
+    "Total_Protiens",
+    "Albumin",
+    "Albumin_and_Globulin_Ratio"
+  ],
+  "feature_metadata": {
+    "Age": {
+      "index": 0,
+      "min": 4.0,
+      "max": 90.0,
+      "mean": 41.905660377358494,
+      "median": 41.0,
+      "std": 14.562564574949677
+    },
+    "Gender": {
+      "index": 1,
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.7221269296740995,
+      "median": 1.0,
+      "std": 0.44795047395170556
+    },
+    "Total_Bilirubin": {
+      "index": 2,
+      "min": 0.4,
+      "max": 21.1,
+      "mean": 2.429331046312178,
+      "median": 1.5,
+      "std": 2.725506369968909
+    },
+    "Direct_Bilirubin": {
+      "index": 3,
+      "min": 0.1,
+      "max": 8.1,
+      "mean": 1.0874785591766725,
+      "median": 0.6,
+      "std": 1.2975624287106013
+    },
+    "Alkaline_Phosphotase": {
+      "index": 4,
+      "min": 63.0,
+      "max": 1983.0,
+      "mean": 295.33962264150944,
+      "median": 216.0,
+      "std": 243.20860027956118
+    },
+    "Alamine_Aminotransferase": {
+      "index": 5,
+      "min": 10.0,
+      "max": 632.0,
+      "mean": 57.449399656946824,
+      "median": 32.0,
+      "std": 77.72598057986141
+    },
+    "Aspartate_Aminotransferase": {
+      "index": 6,
+      "min": 10.0,
+      "max": 757.0,
+      "mean": 66.32933104631218,
+      "median": 37.0,
+      "std": 75.06473785125554
+    },
+    "Total_Protiens": {
+      "index": 7,
+      "min": 3.5,
+      "max": 9.6,
+      "mean": 6.507890222984562,
+      "median": 6.5,
+      "std": 0.9698222724257725
+    },
+    "Albumin": {
+      "index": 8,
+      "min": 0.9,
+      "max": 5.4,
+      "mean": 3.1699828473413376,
+      "median": 3.2,
+      "std": 0.7521093263707399
+    },
+    "Albumin_and_Globulin_Ratio": {
+      "index": 9,
+      "min": 0.3,
+      "max": 1.63,
+      "mean": 0.8739965694682676,
+      "median": 0.88,
+      "std": 0.28936135982141725
+    }
+  },
+  "display_name": "Liver Disease",
+  "positive_label": "Liver Disease",
+  "negative_label": "No Liver Disease"
+}

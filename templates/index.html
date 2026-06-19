@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}MedPredict AI — Disease Prediction System{% endblock %}
+
+{% block content %}
+<!-- ─── Page Header ────────────────────────────────────── -->
+<div class="page-header">
+    <h1>🧬 Disease Prediction System</h1>
+    <p>Enter patient data to receive AI-powered disease predictions with explainable insights using SHAP and LIME</p>
+</div>
+
+<!-- ─── Disease Tabs ───────────────────────────────────── -->
+<div class="glass-card">
+    <div class="tabs" id="disease-tabs">
+        {% for key, defn in feature_definitions.items() %}
+        <button
+            class="tab-btn {% if loop.first %}active{% endif %}"
+            data-tab="{{ key }}"
+            type="button"
+            id="tab-btn-{{ key }}"
+        >
+            {{ defn.icon }} {{ defn.display_name }}
+        </button>
+        {% endfor %}
+    </div>
+
+    <!-- ─── Tab Content: One form per disease ──────────── -->
+    {% for key, defn in feature_definitions.items() %}
+    <div class="tab-content {% if loop.first %}active{% endif %}" id="tab-{{ key }}">
+        <form
+            action="{{ url_for('predict') }}"
+            method="POST"
+            id="form-{{ key }}"
+            class="prediction-form"
+        >
+            <!-- Hidden: disease type -->
+            <input type="hidden" name="disease_type" value="{{ key }}">
+
+            <div class="form-grid">
+                {% for field in defn.fields %}
+                <div class="form-group">
+                    <label class="form-label" for="{{ key }}-{{ field.name }}">
+                        {{ field.label }}
+                        <span class="tooltip-icon" title="{{ field.tooltip }}">?</span>
+                    </label>
+
+                    {% if field.type == 'select' %}
+                    <select
+                        class="form-select"
+                        name="{{ field.name }}"
+                        id="{{ key }}-{{ field.name }}"
+                    >
+                        {% for opt in field.options %}
+                        <option value="{{ opt.value }}" {% if opt.value == field.default %}selected{% endif %}>
+                            {{ opt.label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    {% else %}
+                    <input
+                        type="number"
+                        class="form-input"
+                        name="{{ field.name }}"
+                        id="{{ key }}-{{ field.name }}"
+                        value="{{ field.default }}"
+                        min="{{ field.min }}"
+                        max="{{ field.max }}"
+                        step="{{ field.step }}"
+                        title="{{ field.tooltip }}"
+                        required
+                    >
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Submit Button -->
+            <div class="action-row" style="margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary btn-lg" id="submit-{{ key }}">
+                    <span class="btn-text">🔍 Analyze & Predict</span>
+                    <span class="spinner"></span>
+                </button>
+                <button type="reset" class="btn btn-outline btn-lg">
+                    ↺ Reset Form
+                </button>
+            </div>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- ─── Feature Highlights ─────────────────────────────── -->
+<div class="stats-grid" style="margin-top: 3rem;">
+    <div class="stat-card">
+        <div class="stat-icon blue">🤖</div>
+        <div class="stat-content">
+            <div class="stat-value">XGBoost</div>
+            <div class="stat-label">ML Model Engine</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon green">📊</div>
+        <div class="stat-content">
+            <div class="stat-value">SHAP</div>
+            <div class="stat-label">Feature Contribution Charts</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon purple">🔬</div>
+        <div class="stat-content">
+            <div class="stat-value">LIME</div>
+            <div class="stat-label">Human-Readable Explanations</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon orange">🏥</div>
+        <div class="stat-content">
+            <div class="stat-value">4</div>
+            <div class="stat-label">Disease Models Available</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

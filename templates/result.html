@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Result — MedPredict AI{% endblock %}
+
+{% block content %}
+{% set is_positive = prediction.prediction == disease_info.positive_label %}
+{% set confidence_pct = (prediction.confidence * 100)|round(1) %}
+{% set risk = prediction.risk_level|lower %}
+
+<!-- ─── Result Banner ──────────────────────────────────── -->
+<div class="result-banner {{ 'risk' if is_positive else 'safe' }}">
+    <div class="result-disease">{{ disease_info.display_name }}</div>
+    <div class="result-label">{{ prediction.prediction }}</div>
+    <div class="risk-badge {{ risk }}">
+        {% if risk == 'high' %}🔴{% elif risk == 'medium' %}🟡{% else %}🟢{% endif %}
+        {{ prediction.risk_level }} Risk
+    </div>
+</div>
+
+<!-- ─── Confidence Score ───────────────────────────────── -->
+<div class="glass-card" style="margin-bottom: 2rem;">
+    <div class="progress-ring-container">
+        <h3 style="color: var(--text-secondary); font-weight: 500;">Confidence Score</h3>
+        <div class="progress-ring" id="confidence-ring">
+            <svg viewBox="0 0 160 160">
+                <circle class="bg" cx="80" cy="80" r="70"></circle>
+                <circle
+                    class="progress {{ risk }}"
+                    cx="80" cy="80" r="70"
+                    id="progress-circle"
+                    data-value="{{ confidence_pct }}"
+                ></circle>
+            </svg>
+            <div class="percentage {{ risk }}" id="confidence-text">0%</div>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">
+            The model is <strong>{{ confidence_pct }}%</strong> confident in this prediction
+        </p>
+    </div>
+</div>
+
+<!-- ─── SHAP + LIME Explanation ─────────────────────────── -->
+<div class="explanation-section">
+    <!-- SHAP Waterfall Chart -->
+    <div class="explanation-card">
+        <div class="card-header">
+            📊 SHAP Explanation
+        </div>
+        <div class="card-body">
+            {% if prediction.shap_chart_path %}
+            <img
+                src="{{ url_for('static', filename='charts/' + prediction.shap_chart_path) }}"
+                alt="SHAP Waterfall Chart showing feature contributions"
+                loading="lazy"
+            >
+            <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted);">
+                Each bar shows how a feature pushes the prediction away from the average.
+                Red bars increase risk; blue bars decrease risk.
+            </p>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📊</div>
+                <p>SHAP chart unavailable for this prediction.</p>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem;">Ensure the SHAP library is installed.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- LIME Text Explanation -->
+    <div class="explanation-card">
+        <div class="card-header">
+            🔬 LIME Explanation
+        </div>
+        <div class="card-body">
+            {% if prediction.lime_text and prediction.lime_text|length > 0 %}
+            <ul class="lime-list">
+                {% for explanation in prediction.lime_text %}
+                <li class="lime-item">
+                    {% if '↑' in explanation or 'increases' in explanation %}
+                        <span class="arrow-up">▲</span>
+                    {% elif '↓' in explanation or 'decreases' in explanation %}
+                        <span class="arrow-down">▼</span>
+                    {% endif %}
+                    {{ explanation }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🔬</div>
+                <p>LIME explanation unavailable for this prediction.</p>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem;">Ensure the LIME library is installed.</p>
+            </div>
+            {% endif %}
+
+            {% if prediction.lime_chart_path %}
+            <div style="margin-top: 1.5rem;">
+                <img
+                    src="{{ url_for('static', filename='charts/' + prediction.lime_chart_path) }}"
+                    alt="LIME Feature Importance Chart"
+                    loading="lazy"
+                >
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- ─── Patient Data Summary ───────────────────────────── -->
+<div class="glass-card" style="margin-top: 2rem;">
+    <h3 style="margin-bottom: 1rem; color: var(--text-secondary);">📋 Patient Data Submitted</h3>
+    <div class="patient-data-grid">
+        {% if prediction.patient_data %}
+            {% for key, value in prediction.patient_data.items() %}
+            <div class="patient-data-item">
+                <span class="data-label">{{ key }}</span>
+                <span class="data-value">{{ value }}</span>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+<!-- ─── What-If Analysis ───────────────────────────────── -->
+<div class="glass-card" style="margin-top: 2rem;">
+    <h3 style="margin-bottom: 0.5rem; color: var(--text-secondary);">🔄 What-If Analysis</h3>
+    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">
+        Adjust feature values below to see how the prediction changes in real time.
+    </p>
+    <div class="form-grid" id="whatif-controls">
+        {% if prediction.patient_data and feature_definitions %}
+            {% for field in feature_definitions.fields %}
+            <div class="form-group">
+                <label class="form-label" for="whatif-{{ field.name }}">
+                    {{ field.label }}
+                </label>
+                {% if field.type == 'select' %}
+                <select
+                    class="form-select whatif-input"
+                    data-feature="{{ field.name }}"
+                    id="whatif-{{ field.name }}"
+                >
+                    {% for opt in field.options %}
+                    <option value="{{ opt.value }}"
+                        {% if prediction.patient_data.get(field.name)|string == opt.value|string %}selected{% endif %}
+                    >{{ opt.label }}</option>
+                    {% endfor %}
+                </select>
+                {% else %}
+                <input
+                    type="number"
+                    class="form-input whatif-input"
+                    data-feature="{{ field.name }}"
+                    id="whatif-{{ field.name }}"
+                    value="{{ prediction.patient_data.get(field.name, field.default) }}"
+                    min="{{ field.min }}"
+                    max="{{ field.max }}"
+                    step="{{ field.step }}"
+                >
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div id="whatif-result" style="margin-top: 1.5rem; display: none;">
+        <div class="stat-card" style="justify-content: center;">
+            <div>
+                <div class="stat-label">Updated Prediction</div>
+                <div class="stat-value" id="whatif-prediction" style="font-size: 1.25rem;">—</div>
+                <div style="margin-top: 0.25rem;">
+                    <span id="whatif-confidence" style="color: var(--text-secondary); font-family: var(--font-mono);">—</span>
+                    &nbsp;
+                    <span id="whatif-risk" class="risk-badge low">—</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Action Buttons ─────────────────────────────────── -->
+<div class="action-row">
+    <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+        🔍 New Prediction
+    </a>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-outline btn-lg">
+        📊 View Dashboard
+    </a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // ─── Animate Confidence Ring ─────────────────────────
+    document.addEventListener('DOMContentLoaded', function() {
+        const circle = document.getElementById('progress-circle');
+        const textEl = document.getElementById('confidence-text');
+
+        if (circle && textEl) {
+            const value = parseFloat(circle.dataset.value);
+            const circumference = 2 * Math.PI * 70; // radius = 70
+
+            // Set initial state
+            circle.style.strokeDasharray = circumference;
+            circle.style.strokeDashoffset = circumference;
+
+            // Animate after a small delay
+            setTimeout(() => {
+                const offset = circumference - (value / 100) * circumference;
+                circle.style.strokeDashoffset = offset;
+
+                // Count up the percentage text
+                let current = 0;
+                const increment = value / 60; // ~60 frames
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= value) {
+                        current = value;
+                        clearInterval(timer);
+                    }
+                    textEl.textContent = current.toFixed(1) + '%';
+                }, 25);
+            }, 300);
+        }
+
+        // ─── What-If Analysis ─────────────────────────────
+        const whatifInputs = document.querySelectorAll('.whatif-input');
+        const whatifResult = document.getElementById('whatif-result');
+        let debounceTimer = null;
+
+        whatifInputs.forEach(input => {
+            input.addEventListener('change', runWhatIf);
+            input.addEventListener('input', function() {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(runWhatIf, 500);
+            });
+        });
+
+        function runWhatIf() {
+            const features = {};
+            whatifInputs.forEach(input => {
+                features[input.dataset.feature] = parseFloat(input.value);
+            });
+
+            const disease = '{{ prediction.disease_type }}';
+
+            fetch('/api/whatif', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ disease: disease, features: features }),
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    whatifResult.style.display = 'block';
+                    document.getElementById('whatif-prediction').textContent = data.prediction;
+                    document.getElementById('whatif-confidence').textContent =
+                        (data.confidence * 100).toFixed(1) + '%';
+
+                    const riskEl = document.getElementById('whatif-risk');
+                    riskEl.textContent = data.risk_level + ' Risk';
+                    riskEl.className = 'risk-badge ' + data.risk_level.toLowerCase();
+                }
+            })
+            .catch(err => console.error('What-If failed:', err));
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,173 @@
+{
+  "disease_key": "kidney",
+  "model_name": "Random Forest",
+  "feature_names": [
+    "age",
+    "bp",
+    "sg",
+    "al",
+    "su",
+    "bgr",
+    "bu",
+    "sc",
+    "sod",
+    "pot",
+    "hemo",
+    "pcv",
+    "wc",
+    "rc",
+    "htn",
+    "dm",
+    "appet",
+    "ane"
+  ],
+  "feature_metadata": {
+    "age": {
+      "index": 0,
+      "min": 2.0,
+      "max": 90.0,
+      "mean": 51.4775,
+      "median": 51.0,
+      "std": 16.60028595386236
+    },
+    "bp": {
+      "index": 1,
+      "min": 50.0,
+      "max": 124.0,
+      "mean": 78.0775,
+      "median": 77.0,
+      "std": 13.28557464884376
+    },
+    "sg": {
+      "index": 2,
+      "min": 1.005,
+      "max": 1.025,
+      "mean": 1.0143,
+      "median": 1.015,
+      "std": 0.007203124322125788
+    },
+    "al": {
+      "index": 3,
+      "min": 0.0,
+      "max": 5.0,
+      "mean": 1.8525,
+      "median": 2.0,
+      "std": 1.7235845642149386
+    },
+    "su": {
+      "index": 4,
+      "min": 0.0,
+      "max": 5.0,
+      "mean": 1.285,
+      "median": 1.0,
+      "std": 1.5917835908188023
+    },
+    "bgr": {
+      "index": 5,
+      "min": 70.0,
+      "max": 352.0,
+      "mean": 140.59,
+      "median": 128.5,
+      "std": 52.079284749312755
+    },
+    "bu": {
+      "index": 6,
+      "min": 10.0,
+      "max": 213.4,
+      "mean": 67.667,
+      "median": 52.7,
+      "std": 44.81190032792628
+    },
+    "sc": {
+      "index": 7,
+      "min": 0.4,
+      "max": 12.4,
+      "mean": 2.699499999999999,
+      "median": 1.45,
+      "std": 2.4945339745130752
+    },
+    "sod": {
+      "index": 8,
+      "min": 111.0,
+      "max": 156.0,
+      "mean": 135.25,
+      "median": 136.0,
+      "std": 7.475125417008065
+    },
+    "pot": {
+      "index": 9,
+      "min": 2.5,
+      "max": 8.6,
+      "mean": 4.71675,
+      "median": 4.5,
+      "std": 1.1811199928457736
+    },
+    "hemo": {
+      "index": 10,
+      "min": 3.1,
+      "max": 17.8,
+      "mean": 11.710749999999997,
+      "median": 11.6,
+      "std": 3.355869401138847
+    },
+    "pcv": {
+      "index": 11,
+      "min": 10.0,
+      "max": 54.0,
+      "mean": 36.4225,
+      "median": 37.0,
+      "std": 9.118881167665252
+    },
+    "wc": {
+      "index": 12,
+      "min": 2200.0,
+      "max": 18535.0,
+      "mean": 9078.3575,
+      "median": 8809.0,
+      "std": 2636.947233012779
+    },
+    "rc": {
+      "index": 13,
+      "min": 2.1,
+      "max": 6.8,
+      "mean": 4.431,
+      "median": 4.5,
+      "std": 1.016434454355026
+    },
+    "htn": {
+      "index": 14,
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.4425,
+      "median": 0.0,
+      "std": 0.4966827458247367
+    },
+    "dm": {
+      "index": 15,
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.335,
+      "median": 0.0,
+      "std": 0.4719904660054057
+    },
+    "appet": {
+      "index": 16,
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.6675,
+      "median": 1.0,
+      "std": 0.47110906380582407
+    },
+    "ane": {
+      "index": 17,
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.3425,
+      "median": 0.0,
+      "std": 0.4745458355101222
+    }
+  },
+  "display_name": "Kidney Disease",
+  "positive_label": "Chronic Kidney Disease",
+  "negative_label": "No Kidney Disease"
+}

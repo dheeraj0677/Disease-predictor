@@ -1,0 +1,128 @@
+{
+  "disease_key": "heart",
+  "model_name": "Logistic Regression",
+  "feature_names": [
+    "age",
+    "sex",
+    "cp",
+    "trestbps",
+    "chol",
+    "fbs",
+    "restecg",
+    "thalach",
+    "exang",
+    "oldpeak",
+    "slope",
+    "ca",
+    "thal"
+  ],
+  "feature_metadata": {
+    "age": {
+      "index": 0,
+      "min": 29.0,
+      "max": 77.0,
+      "mean": 53.897689768976896,
+      "median": 54.0,
+      "std": 8.576163986435809
+    },
+    "sex": {
+      "index": 1,
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.7029702970297029,
+      "median": 1.0,
+      "std": 0.45694973303819114
+    },
+    "cp": {
+      "index": 2,
+      "min": 0.0,
+      "max": 3.0,
+      "mean": 1.3036303630363035,
+      "median": 1.0,
+      "std": 1.1885954306205067
+    },
+    "trestbps": {
+      "index": 3,
+      "min": 94.0,
+      "max": 180.0,
+      "mean": 132.22112211221122,
+      "median": 132.0,
+      "std": 16.659290594058916
+    },
+    "chol": {
+      "index": 4,
+      "min": 146.0,
+      "max": 370.0,
+      "mean": 246.64356435643563,
+      "median": 248.0,
+      "std": 42.08170211982832
+    },
+    "fbs": {
+      "index": 5,
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.19141914191419143,
+      "median": 0.0,
+      "std": 0.39341816686958686
+    },
+    "restecg": {
+      "index": 6,
+      "min": 0.0,
+      "max": 2.0,
+      "mean": 0.7095709570957096,
+      "median": 1.0,
+      "std": 0.656126859826827
+    },
+    "thalach": {
+      "index": 7,
+      "min": 84.0,
+      "max": 202.0,
+      "mean": 148.1914191419142,
+      "median": 149.0,
+      "std": 20.27426612637148
+    },
+    "exang": {
+      "index": 8,
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.30033003300330036,
+      "median": 0.0,
+      "std": 0.4584014662711463
+    },
+    "oldpeak": {
+      "index": 9,
+      "min": 0.0,
+      "max": 6.2,
+      "mean": 1.0247524752475248,
+      "median": 0.7,
+      "std": 1.0922837015199323
+    },
+    "slope": {
+      "index": 10,
+      "min": 0.0,
+      "max": 2.0,
+      "mean": 1.0792079207920793,
+      "median": 1.0,
+      "std": 0.6751091096291456
+    },
+    "ca": {
+      "index": 11,
+      "min": 0.0,
+      "max": 3.0,
+      "mean": 1.0066006600660067,
+      "median": 1.0,
+      "std": 1.128664619816696
+    },
+    "thal": {
+      "index": 12,
+      "min": 0.0,
+      "max": 2.0,
+      "mean": 1.1716171617161717,
+      "median": 1.0,
+      "std": 0.6627174469492666
+    }
+  },
+  "display_name": "Heart Disease",
+  "positive_label": "Heart Disease",
+  "negative_label": "No Heart Disease"
+}

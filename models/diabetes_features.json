@@ -1,0 +1,83 @@
+{
+  "disease_key": "diabetes",
+  "model_name": "Logistic Regression",
+  "feature_names": [
+    "Pregnancies",
+    "Glucose",
+    "BloodPressure",
+    "SkinThickness",
+    "Insulin",
+    "BMI",
+    "DiabetesPedigreeFunction",
+    "Age"
+  ],
+  "feature_metadata": {
+    "Pregnancies": {
+      "index": 0,
+      "min": 0.0,
+      "max": 12.0,
+      "mean": 3.65625,
+      "median": 3.0,
+      "std": 2.2183098154901626
+    },
+    "Glucose": {
+      "index": 1,
+      "min": 38.0,
+      "max": 199.0,
+      "mean": 120.85677083333333,
+      "median": 119.0,
+      "std": 31.04801902546789
+    },
+    "BloodPressure": {
+      "index": 2,
+      "min": 33.0,
+      "max": 109.0,
+      "mean": 70.82942708333333,
+      "median": 71.0,
+      "std": 12.795397882185343
+    },
+    "SkinThickness": {
+      "index": 3,
+      "min": 0.0,
+      "max": 70.0,
+      "mean": 29.036458333333332,
+      "median": 29.0,
+      "std": 11.043414513784397
+    },
+    "Insulin": {
+      "index": 4,
+      "min": 7.0,
+      "max": 846.0,
+      "mean": 104.03645833333333,
+      "median": 69.0,
+      "std": 113.82788644831253
+    },
+    "BMI": {
+      "index": 5,
+      "min": 18.0,
+      "max": 52.5,
+      "mean": 31.731380208333334,
+      "median": 31.25,
+      "std": 6.652771365756151
+    },
+    "DiabetesPedigreeFunction": {
+      "index": 6,
+      "min": 0.078,
+      "max": 2.42,
+      "mean": 0.44355208333333335,
+      "median": 0.297,
+      "std": 0.42332597073137357
+    },
+    "Age": {
+      "index": 7,
+      "min": 21.0,
+      "max": 81.0,
+      "mean": 31.337239583333332,
+      "median": 25.0,
+      "std": 14.078077249637698
+    }
+  },
+  "display_name": "Diabetes",
+  "positive_label": "Diabetic",
+  "negative_label": "Not Diabetic"
+}
