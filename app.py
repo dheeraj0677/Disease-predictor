@@ -5,6 +5,7 @@ Routes:
   GET  /             → Homepage with tabbed patient input forms
   POST /predict      → Run model + SHAP + LIME, save to DB, redirect to result
   GET  /result/<id>  → Show prediction result with explanations
+  GET  /report/<id>  → Comprehensive patient health report with normal ranges
   GET  /dashboard    → Doctor dashboard with filters and charts
   GET  /api/stats    → JSON stats endpoint
   POST /api/predict  → REST API for external integrations
@@ -38,6 +39,7 @@ import config
 from core.db import init_db, save_prediction, get_prediction_by_id, get_all_predictions, get_stats
 from core.shap_explain import generate_waterfall_plot, generate_summary_plot
 from core.lime_explain import generate_lime_explanation
+from core.health_report import generate_range_comparisons, generate_radar_data, generate_recommendations
 
 # ─── Flask App Setup ─────────────────────────────────────────────
 app = Flask(__name__)
@@ -540,6 +542,56 @@ def export_csv():
     except Exception as e:
         flash(f"Export failed: {str(e)}", "error")
         return redirect(url_for("dashboard"))
+
+
+@app.route("/report/<int:pred_id>")
+def health_report(pred_id):
+    """
+    Generate a comprehensive patient health report for a prediction.
+    Shows normal range comparisons, radar chart, and recommendations.
+    """
+    prediction = get_prediction_by_id(pred_id)
+
+    if prediction is None:
+        flash("Prediction not found.", "error")
+        return redirect(url_for("index"))
+
+    disease_key = prediction["disease_type"]
+    disease_info = config.DISEASES.get(disease_key, {})
+    patient_data = prediction.get("patient_data", {})
+
+    # Generate range comparisons
+    range_comparisons = generate_range_comparisons(disease_key, patient_data)
+
+    # Generate radar chart data
+    radar_data = generate_radar_data(range_comparisons)
+
+    # Determine if prediction is positive
+    is_positive = prediction["prediction"] == disease_info.get("positive_label", "")
+
+    # Generate recommendations
+    recommendations = generate_recommendations(
+        disease_key, patient_data, prediction["prediction"], is_positive
+    )
+
+    # Count statuses for summary
+    total_fields = len(range_comparisons)
+    normal_count = sum(1 for c in range_comparisons if c["status"] == "normal")
+    warning_count = sum(1 for c in range_comparisons if c["status"] == "warning")
+    abnormal_count = sum(1 for c in range_comparisons if c["status"] == "abnormal")
+
+    return render_template(
+        "report.html",
+        prediction=prediction,
+        disease_info=disease_info,
+        range_comparisons=range_comparisons,
+        radar_data=radar_data,
+        recommendations=recommendations,
+        total_fields=total_fields,
+        normal_count=normal_count,
+        warning_count=warning_count,
+        abnormal_count=abnormal_count,
+    )
 
 
 # ─── Error Handlers ──────────────────────────────────────────────
