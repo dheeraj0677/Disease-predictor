@@ -61,7 +61,7 @@
     </div>
     <div class="range-grid" id="range-grid">
         {% for item in range_comparisons %}
-        <div class="range-card {{ item.status }}" style="animation-delay: {{ loop.index0 * 0.05 }}s;">
+        <div class="range-card {{ item.status }}" data-delay="{{ loop.index0 * 0.05 }}">
             <div class="range-card-header">
                 <span class="range-label">{{ item.label }}</span>
                 <span class="range-status-badge {{ item.status }}">
@@ -72,8 +72,8 @@
             </div>
             <div class="range-bar-container">
                 <div class="range-bar">
-                    <div class="range-normal-zone" style="left: {{ item.normal_start_pct }}%; width: {{ item.normal_width_pct }}%;"></div>
-                    <div class="range-marker {{ item.status }}" style="left: {{ item.value_pct }}%;"></div>
+                    <div class="range-normal-zone" data-left="{{ item.normal_start_pct }}" data-width="{{ item.normal_width_pct }}"></div>
+                    <div class="range-marker {{ item.status }}" data-left="{{ item.value_pct }}"></div>
                 </div>
                 <div class="range-labels">
                     <span>{{ item.display_min }}</span>
@@ -108,7 +108,7 @@
     </div>
     <div class="recommendations-grid">
         {% for rec in recommendations %}
-        <div class="recommendation-card {{ rec.severity }}" style="animation-delay: {{ loop.index0 * 0.08 }}s;">
+        <div class="recommendation-card {{ rec.severity }}" data-delay="{{ loop.index0 * 0.08 }}">
             <div class="rec-icon">{{ rec.icon }}</div>
             <div class="rec-content">
                 <h4>{{ rec.title }}</h4>
@@ -167,10 +167,23 @@
 {% endblock %}
 
 {% block scripts %}
+<script id="radar-json" type="application/json">{{ radar_data | tojson }}</script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // ─── Apply data-attribute styles ─────────────────────
+    document.querySelectorAll('[data-delay]').forEach(function(el) {
+        el.style.animationDelay = el.dataset.delay + 's';
+    });
+    document.querySelectorAll('.range-normal-zone[data-left]').forEach(function(el) {
+        el.style.left = el.dataset.left + '%';
+        el.style.width = el.dataset.width + '%';
+    });
+    document.querySelectorAll('.range-marker[data-left]').forEach(function(el) {
+        el.style.left = el.dataset.left + '%';
+    });
+
     // ─── Radar Chart ─────────────────────────────────────
-    const radarData = {{ radar_data | tojson }};
+    var radarData = JSON.parse(document.getElementById('radar-json').textContent);
 
     if (radarData && radarData.labels && radarData.labels.length > 0) {
         const ctx = document.getElementById('radarChart').getContext('2d');
@@ -261,9 +274,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }, { threshold: 0.1 });
 
-        rangeCards.forEach(card => observer.observe(card));
+        rangeCards.forEach(function(card) { observer.observe(card); });
     } else {
-        rangeCards.forEach(card => card.classList.add('visible'));
+        rangeCards.forEach(function(card) { card.classList.add('visible'); });
     }
 });
 </script>
