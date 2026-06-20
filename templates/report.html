@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+
+{% block title %}Health Report #{{ prediction.id }} — MedPredict AI{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/report.css') }}">
+{% endblock %}
+
+{% block content %}
+{% set is_positive = prediction.prediction == disease_info.positive_label %}
+{% set confidence_pct = (prediction.confidence * 100)|round(1) %}
+{% set risk = prediction.risk_level|lower %}
+
+<!-- ─── Report Header ──────────────────────────────────── -->
+<div class="report-header">
+    <div class="report-header-top">
+        <div class="report-logo">
+            <span class="report-logo-icon">🧬</span>
+            <div>
+                <h2 class="report-brand">MedPredict AI</h2>
+                <span class="report-subtitle">Patient Health Report</span>
+            </div>
+        </div>
+        <div class="report-meta">
+            <div class="report-meta-item">
+                <span class="meta-label">Report ID</span>
+                <span class="meta-value">#{{ prediction.id }}</span>
+            </div>
+            <div class="report-meta-item">
+                <span class="meta-label">Generated</span>
+                <span class="meta-value">{{ prediction.timestamp[:16] if prediction.timestamp else 'N/A' }}</span>
+            </div>
+            <div class="report-meta-item">
+                <span class="meta-label">Disease Screened</span>
+                <span class="meta-value">{{ disease_info.display_name }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="report-verdict {{ 'positive' if is_positive else 'negative' }}">
+        <div class="verdict-icon">
+            {% if is_positive %}⚠️{% else %}✅{% endif %}
+        </div>
+        <div class="verdict-text">
+            <h3>{{ prediction.prediction }}</h3>
+            <p>Confidence: <strong>{{ confidence_pct }}%</strong> · Risk Level:
+                <span class="risk-badge {{ risk }}">
+                    {% if risk == 'high' %}🔴{% elif risk == 'medium' %}🟡{% else %}🟢{% endif %}
+                    {{ prediction.risk_level }}
+                </span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Normal Range Comparison ────────────────────────── -->
+<div class="report-section">
+    <div class="section-header">
+        <h3><span class="section-icon">📊</span> Lab Values vs Normal Ranges</h3>
+        <p>Each bar shows where the patient's value falls relative to the normal range</p>
+    </div>
+    <div class="range-grid" id="range-grid">
+        {% for item in range_comparisons %}
+        <div class="range-card {{ item.status }}" style="animation-delay: {{ loop.index0 * 0.05 }}s;">
+            <div class="range-card-header">
+                <span class="range-label">{{ item.label }}</span>
+                <span class="range-status-badge {{ item.status }}">
+                    {% if item.status == 'normal' %}✓ Normal
+                    {% elif item.status == 'warning' %}⚠ Borderline
+                    {% else %}✗ Abnormal{% endif %}
+                </span>
+            </div>
+            <div class="range-bar-container">
+                <div class="range-bar">
+                    <div class="range-normal-zone" style="left: {{ item.normal_start_pct }}%; width: {{ item.normal_width_pct }}%;"></div>
+                    <div class="range-marker {{ item.status }}" style="left: {{ item.value_pct }}%;"></div>
+                </div>
+                <div class="range-labels">
+                    <span>{{ item.display_min }}</span>
+                    <span class="range-value {{ item.status }}">{{ item.value }}</span>
+                    <span>{{ item.display_max }}</span>
+                </div>
+            </div>
+            <div class="range-detail">
+                Normal: <strong>{{ item.normal_low }} — {{ item.normal_high }}</strong>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- ─── Radar Chart ────────────────────────────────────── -->
+<div class="report-section">
+    <div class="section-header">
+        <h3><span class="section-icon">🎯</span> Health Profile Radar</h3>
+        <p>Visual overview of how the patient's values compare to ideal ranges</p>
+    </div>
+    <div class="radar-chart-container">
+        <canvas id="radarChart" width="500" height="500"></canvas>
+    </div>
+</div>
+
+<!-- ─── Health Recommendations ─────────────────────────── -->
+<div class="report-section">
+    <div class="section-header">
+        <h3><span class="section-icon">💡</span> Personalized Health Recommendations</h3>
+        <p>Based on the patient's lab values and prediction outcome</p>
+    </div>
+    <div class="recommendations-grid">
+        {% for rec in recommendations %}
+        <div class="recommendation-card {{ rec.severity }}" style="animation-delay: {{ loop.index0 * 0.08 }}s;">
+            <div class="rec-icon">{{ rec.icon }}</div>
+            <div class="rec-content">
+                <h4>{{ rec.title }}</h4>
+                <p>{{ rec.description }}</p>
+            </div>
+            <div class="rec-severity-indicator {{ rec.severity }}"></div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- ─── Summary Statistics ─────────────────────────────── -->
+<div class="report-section">
+    <div class="section-header">
+        <h3><span class="section-icon">📋</span> Report Summary</h3>
+    </div>
+    <div class="summary-grid">
+        <div class="summary-stat">
+            <div class="summary-number">{{ total_fields }}</div>
+            <div class="summary-label">Parameters Analyzed</div>
+        </div>
+        <div class="summary-stat">
+            <div class="summary-number normal-count">{{ normal_count }}</div>
+            <div class="summary-label">Within Normal Range</div>
+        </div>
+        <div class="summary-stat">
+            <div class="summary-number warning-count">{{ warning_count }}</div>
+            <div class="summary-label">Borderline Values</div>
+        </div>
+        <div class="summary-stat">
+            <div class="summary-number abnormal-count">{{ abnormal_count }}</div>
+            <div class="summary-label">Abnormal Values</div>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Action Buttons ─────────────────────────────────── -->
+<div class="action-row no-print">
+    <button onclick="window.print()" class="btn btn-primary btn-lg" id="print-report-btn">
+        🖨️ Print / Save as PDF
+    </button>
+    <a href="{{ url_for('result', pred_id=prediction.id) }}" class="btn btn-outline btn-lg">
+        🔍 View Full Result
+    </a>
+    <a href="{{ url_for('index') }}" class="btn btn-outline btn-lg">
+        ➕ New Prediction
+    </a>
+</div>
+
+<!-- ─── Disclaimer ─────────────────────────────────────── -->
+<div class="report-disclaimer">
+    <p>⚕️ <strong>Disclaimer:</strong> This report is generated by an AI-powered system for informational purposes only.
+    It is not a substitute for professional medical diagnosis, advice, or treatment. Always consult a qualified
+    healthcare provider for medical decisions.</p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ─── Radar Chart ─────────────────────────────────────
+    const radarData = {{ radar_data | tojson }};
+
+    if (radarData && radarData.labels && radarData.labels.length > 0) {
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: radarData.labels,
+                datasets: [
+                    {
+                        label: 'Patient Values (Normalized)',
+                        data: radarData.patient_values,
+                        backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                        borderColor: 'rgba(59, 130, 246, 0.8)',
+                        borderWidth: 2,
+                        pointBackgroundColor: radarData.point_colors,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 1,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                    },
+                    {
+                        label: 'Normal Range (Upper)',
+                        data: radarData.normal_upper,
+                        backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                        borderColor: 'rgba(16, 185, 129, 0.4)',
+                        borderWidth: 1,
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        fill: false,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#94a3b8',
+                            font: { family: 'Inter', size: 12 },
+                            padding: 20,
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                        titleColor: '#f0f4f8',
+                        bodyColor: '#94a3b8',
+                        borderColor: 'rgba(255,255,255,0.1)',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        padding: 12,
+                    }
+                },
+                scales: {
+                    r: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.06)',
+                        },
+                        angleLines: {
+                            color: 'rgba(255, 255, 255, 0.06)',
+                        },
+                        ticks: {
+                            color: '#64748b',
+                            backdropColor: 'transparent',
+                            font: { size: 10 },
+                        },
+                        pointLabels: {
+                            color: '#94a3b8',
+                            font: { family: 'Inter', size: 11, weight: '500' },
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100,
+                    }
+                }
+            }
+        });
+    }
+
+    // ─── Animate range cards on scroll ───────────────────
+    const rangeCards = document.querySelectorAll('.range-card');
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        rangeCards.forEach(card => observer.observe(card));
+    } else {
+        rangeCards.forEach(card => card.classList.add('visible'));
+    }
+});
+</script>
+{% endblock %}
