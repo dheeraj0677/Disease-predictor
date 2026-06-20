@@ -1,83 +1,299 @@
-# 🧬 MedPredict AI — Disease Prediction System with Explainability
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/Flask-3.0+-000000?style=for-the-badge&logo=flask&logoColor=white" alt="Flask"/>
+  <img src="https://img.shields.io/badge/XGBoost-2.0+-FF6600?style=for-the-badge&logo=xgboost&logoColor=white" alt="XGBoost"/>
+  <img src="https://img.shields.io/badge/SHAP-Explainability-4B8BBE?style=for-the-badge" alt="SHAP"/>
+  <img src="https://img.shields.io/badge/LIME-Explainability-10B981?style=for-the-badge" alt="LIME"/>
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License"/>
+</p>
 
-A production-ready web application that uses machine learning to predict diseases and provides **transparent, explainable predictions** using SHAP and LIME. Built for doctors and healthcare professionals.
+<h1 align="center">🧬 MedPredict AI</h1>
+<h3 align="center">Disease Prediction System with Explainable AI</h3>
+
+<p align="center">
+  <em>An intelligent, production-ready web app that predicts diseases using machine learning<br/>and explains every prediction transparently with SHAP & LIME — built for doctors and researchers.</em>
+</p>
+
+<p align="center">
+  <a href="#-quick-start">Quick Start</a> •
+  <a href="#-features">Features</a> •
+  <a href="#-tech-stack">Tech Stack</a> •
+  <a href="#-api-reference">API</a> •
+  <a href="#-how-explainability-works">Explainability</a> •
+  <a href="#-health-report">Health Report</a>
+</p>
+
+---
+
+## 🎯 What Is This?
+
+MedPredict AI is a **full-stack disease prediction system** that doesn't just tell you the result — it **explains why**. Doctors and healthcare professionals can input patient data, get instant predictions across 4 diseases, and see exactly which factors drove the AI's decision through interactive SHAP waterfall charts and LIME text explanations.
+
+> **💡 Key Differentiator:** Unlike black-box AI tools, every prediction comes with a full explainability breakdown and a comprehensive health report comparing patient values against medical reference ranges.
 
 ---
 
 ## ✨ Features
 
-- [x] **4 Disease Prediction Models** — Diabetes, Heart Disease, Kidney Disease, Liver Disease
-- [x] **SHAP Explainability** — Waterfall plots showing each feature's contribution to the prediction
-- [x] **LIME Explanations** — Human-readable text explanations (e.g., "Glucose 148 → increases risk by 32%")
-- [x] **Confidence Scoring** — Probability percentage with animated circular progress bar
-- [x] **Risk Level Assessment** — Low / Medium / High risk classification
-- [x] **Doctor Dashboard** — Historical predictions, Plotly charts, filterable table
-- [x] **What-If Analysis** — Adjust feature values and see real-time prediction changes
-- [x] **REST API** — JSON endpoints for hospital system integration
-- [x] **CSV Export** — Download all prediction data
-- [x] **Dark Medical Theme** — Premium glassmorphism UI with micro-animations
+<table>
+<tr>
+<td width="50%">
+
+### 🤖 Prediction Engine
+- **4 Disease Models** — Diabetes, Heart, Kidney, Liver
+- **XGBoost** classifier with SMOTE balancing
+- **Confidence scoring** with animated progress ring
+- **Risk stratification** — Low / Medium / High
+
+</td>
+<td width="50%">
+
+### 📊 Explainable AI
+- **SHAP waterfall plots** — feature-level contributions
+- **LIME text explanations** — human-readable insights
+- **What-If Analysis** — adjust values, see changes live
+- **Full transparency** — no black-box predictions
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 📄 Health Reports *(NEW)*
+- **Normal range comparison** with color-coded status bars
+- **Radar chart** health profile visualization
+- **Personalized recommendations** based on lab values
+- **Print/PDF export** with optimized print styles
+
+</td>
+<td width="50%">
+
+### 🏥 Doctor Dashboard
+- **Historical predictions** with filters & search
+- **Interactive Plotly charts** — disease & risk distribution
+- **CSV export** for data analysis
+- **REST API** for hospital system integration
+
+</td>
+</tr>
+</table>
+
+### Additional Highlights
+
+| Feature | Description |
+|:--------|:------------|
+| 🎨 **Premium Dark UI** | Glassmorphism design with floating orbs, micro-animations, and gradient accents |
+| 📱 **Fully Responsive** | Works on desktop, tablet, and mobile |
+| 🔒 **Secure** | Flask secret key, input validation, error handling |
+| ⚡ **Fast** | Predictions in < 1 second, optimized model loading |
+| 🖨️ **Print Ready** | Health reports with `@media print` styles for PDF generation |
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Component | Technology |
-|-----------|-----------|
-| Backend | Python, Flask |
-| ML Models | Scikit-learn, XGBoost |
-| Explainability | SHAP, LIME |
-| Database | SQLite |
-| Frontend | HTML5, CSS3, JavaScript |
-| Charts | Plotly.js, Matplotlib |
-| Data Processing | Pandas, NumPy |
-| Class Balancing | SMOTE (imbalanced-learn) |
+<table>
+<tr>
+<td align="center" width="96">
+  <strong>Python</strong><br/>
+  <sub>3.10+</sub>
+</td>
+<td align="center" width="96">
+  <strong>Flask</strong><br/>
+  <sub>Web Framework</sub>
+</td>
+<td align="center" width="96">
+  <strong>XGBoost</strong><br/>
+  <sub>ML Engine</sub>
+</td>
+<td align="center" width="96">
+  <strong>SHAP</strong><br/>
+  <sub>Explainability</sub>
+</td>
+<td align="center" width="96">
+  <strong>LIME</strong><br/>
+  <sub>Explainability</sub>
+</td>
+<td align="center" width="96">
+  <strong>SQLite</strong><br/>
+  <sub>Database</sub>
+</td>
+<td align="center" width="96">
+  <strong>Chart.js</strong><br/>
+  <sub>Radar Charts</sub>
+</td>
+<td align="center" width="96">
+  <strong>Plotly</strong><br/>
+  <sub>Dashboard</sub>
+</td>
+</tr>
+</table>
+
+| Layer | Technologies |
+|:------|:-------------|
+| **Backend** | Python 3.10+, Flask 3.x, Jinja2 |
+| **Machine Learning** | Scikit-learn, XGBoost, SMOTE (imbalanced-learn) |
+| **Explainability** | SHAP (Shapley values), LIME (local surrogate models) |
+| **Database** | SQLite with indexed queries |
+| **Frontend** | HTML5, CSS3 (custom design system), Vanilla JS |
+| **Visualization** | Plotly.js (dashboard), Chart.js (radar), Matplotlib (SHAP/LIME) |
+| **Data** | Pandas, NumPy, Joblib |
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Clone the Repository
+### Prerequisites
+- Python 3.10 or higher
+- pip package manager
+
+### 1️⃣ Clone & Setup
+
 ```bash
-git clone https://github.com/your-username/disease-predictor.git
-cd disease-predictor
+git clone https://github.com/dheeraj0677/Disease-predictor.git
+cd Disease-predictor
 ```
 
-### 2. Create Virtual Environment
+### 2️⃣ Create Virtual Environment
+
 ```bash
 python -m venv venv
-# Windows:
+
+# Windows
 venv\Scripts\activate
-# macOS/Linux:
+
+# macOS / Linux
 source venv/bin/activate
 ```
 
-### 3. Install Dependencies
+### 3️⃣ Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Generate Datasets & Train Models
+### 4️⃣ Download Datasets & Train Models
+
 ```bash
-python data/download_datasets.py
-python models/train.py
+python core/download_datasets.py
+python core/train.py
 ```
 
-### 5. Run the Application
+### 5️⃣ Launch the Application
+
 ```bash
 python app.py
 ```
 
-Open **http://localhost:5000** in your browser.
+🌐 Open **http://localhost:5000** in your browser and start predicting!
 
 ---
 
-## 📊 How Explainability Works
+## 📄 Health Report *(New Feature)*
 
-### SHAP (SHapley Additive exPlanations)
-SHAP uses game theory (Shapley values) to explain individual predictions. For each prediction, it calculates how much each feature contributes to pushing the prediction away from the average. The waterfall plot visualizes this: red bars indicate features that increase disease risk, while blue bars indicate features that decrease it. This gives doctors a transparent view of *why* the model made its prediction, not just *what* it predicted.
+The **Patient Health Report** is a comprehensive medical summary page available at `/report/<id>` after any prediction. It includes:
 
-### LIME (Local Interpretable Model-agnostic Explanations)
-LIME works by creating slight variations of the patient's data and observing how the prediction changes. It builds a simple, interpretable model around the specific prediction to identify which features matter most locally. The result is human-readable explanations like "Glucose level 148 → increases diabetes risk by 32%", making it easy for non-technical medical staff to understand the model's reasoning.
+| Section | What It Shows |
+|:--------|:--------------|
+| **📊 Lab Values vs Normal Ranges** | Color-coded comparison bars (🟢 Normal · 🟡 Borderline · 🔴 Abnormal) |
+| **🎯 Health Profile Radar** | Interactive Chart.js radar chart comparing patient values to normal upper bounds |
+| **💡 Personalized Recommendations** | Auto-generated health advice based on which values are outside normal range |
+| **📋 Report Summary** | Count of parameters analyzed, normal, borderline, and abnormal values |
+| **🖨️ Print / PDF** | Optimized print stylesheet — click "Print" to save as PDF |
+
+> Every recommendation is severity-sorted (🔴 High → 🟡 Medium → 🟢 Low → 🔵 Info) and includes medically-informed actionable guidance.
+
+---
+
+## 🧠 How Explainability Works
+
+### SHAP — *SHapley Additive exPlanations*
+
+```
+┌─────────────────────────────────────────────────────┐
+│  Base Value (Average)                               │
+│  ══════════════════                                 │
+│  + Glucose: 148        ████████████  (+0.32)  🔴    │
+│  + BMI: 33.6           ██████████    (+0.28)  🔴    │
+│  - BloodPressure: 72   ████          (-0.08)  🔵    │
+│  - Age: 31             ██            (-0.05)  🔵    │
+│  ══════════════════                                 │
+│  → Final Prediction: Diabetic (87.3% confidence)   │
+└─────────────────────────────────────────────────────┘
+```
+
+SHAP uses **Shapley values** from cooperative game theory. For each prediction, it calculates every feature's marginal contribution — how much it pushes the prediction away from the average. **Red bars** = increase risk, **Blue bars** = decrease risk.
+
+### LIME — *Local Interpretable Model-agnostic Explanations*
+
+LIME creates **perturbations** of the patient's data, observes how predictions change, and fits a simple interpretable model around that specific prediction. The result is plain-English explanations:
+
+> *"Glucose level 148 → increases diabetes risk by 32%"*
+> *"BMI 33.6 → increases diabetes risk by 28%"*
+> *"Blood Pressure 72 → decreases diabetes risk by 8%"*
+
+This makes AI decisions understandable even for non-technical medical staff.
+
+---
+
+## 📡 API Reference
+
+### Web Routes
+
+| Route | Method | Description |
+|:------|:-------|:------------|
+| `/` | `GET` | 🏠 Homepage — tabbed patient input forms |
+| `/predict` | `POST` | 🔍 Run prediction (form submit) |
+| `/result/<id>` | `GET` | 📋 Prediction result with SHAP + LIME |
+| `/report/<id>` | `GET` | 📄 Comprehensive health report *(NEW)* |
+| `/dashboard` | `GET` | 📊 Doctor dashboard with analytics |
+| `/export/csv` | `GET` | 📥 Download all predictions as CSV |
+
+### REST API Endpoints
+
+| Endpoint | Method | Description |
+|:---------|:-------|:------------|
+| `/api/predict` | `POST` | JSON prediction for integrations |
+| `/api/whatif` | `POST` | What-If analysis (adjust & re-predict) |
+| `/api/stats` | `GET` | Dashboard statistics as JSON |
+
+<details>
+<summary><strong>📝 API Usage Example</strong></summary>
+
+```bash
+# Predict diabetes via REST API
+curl -X POST http://localhost:5000/api/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "disease": "diabetes",
+    "features": {
+      "Pregnancies": 6,
+      "Glucose": 148,
+      "BloodPressure": 72,
+      "SkinThickness": 35,
+      "Insulin": 0,
+      "BMI": 33.6,
+      "DiabetesPedigreeFunction": 0.627,
+      "Age": 50
+    }
+  }'
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "prediction": "Diabetic",
+  "confidence": 0.8734,
+  "risk_level": "High",
+  "explanations": [
+    "Glucose = 148.0 → increases Diabetic risk",
+    "BMI = 33.6 → increases Diabetic risk",
+    "Age = 50.0 → increases Diabetic risk"
+  ]
+}
+```
+</details>
 
 ---
 
@@ -85,81 +301,107 @@ LIME works by creating slight variations of the patient's data and observing how
 
 ```
 disease-predictor/
-├── app.py                  # Flask application & routes
-├── config.py               # Central configuration
-├── models/
-│   ├── train.py            # Training pipeline for all diseases
-│   ├── *_model.pkl         # Trained models (generated)
-│   ├── *_scaler.pkl        # Feature scalers (generated)
-│   └── *_features.json     # Feature metadata (generated)
-├── data/
-│   ├── download_datasets.py # Dataset generator
-│   └── *.csv               # Disease datasets (generated)
-├── explainability/
-│   ├── shap_explain.py     # SHAP waterfall & summary plots
-│   └── lime_explain.py     # LIME text & chart explanations
-├── database/
-│   ├── db.py               # SQLite helper functions
-│   └── predictions.db      # Database (generated)
-├── static/
-│   ├── css/style.css       # Design system
-│   ├── js/app.js           # Frontend interactivity
-│   └── charts/             # Generated SHAP/LIME charts
-├── templates/
-│   ├── base.html           # Base template
-│   ├── index.html          # Patient input form
-│   ├── result.html         # Prediction results
-│   └── dashboard.html      # Doctor dashboard
-├── requirements.txt
-└── README.md
+│
+├── 📄 app.py                       # Flask application & all routes
+├── ⚙️ config.py                     # Central configuration & paths
+├── 📋 requirements.txt              # Python dependencies
+├── 📖 README.md                     # You are here!
+│
+├── 🧠 core/                         # Core logic modules
+│   ├── train.py                    #   Training pipeline (XGBoost + SMOTE)
+│   ├── download_datasets.py        #   Dataset generator / downloader
+│   ├── db.py                       #   SQLite database operations
+│   ├── shap_explain.py             #   SHAP waterfall & summary plots
+│   ├── lime_explain.py             #   LIME text & chart explanations
+│   └── health_report.py            #   Health report generator (NEW)
+│
+├── 📦 storage/                       # Generated data (gitignored)
+│   ├── *.csv                       #   Disease datasets
+│   ├── *_model.pkl                 #   Trained XGBoost models
+│   ├── *_scaler.pkl                #   Feature scalers
+│   ├── *_features.json             #   Feature metadata
+│   └── predictions.db              #   SQLite database
+│
+├── 🎨 static/
+│   ├── css/
+│   │   ├── style.css               #   Main design system (1100+ lines)
+│   │   └── report.css              #   Health report styles (NEW)
+│   ├── js/
+│   │   └── app.js                  #   Frontend interactivity
+│   └── charts/                     #   Generated SHAP/LIME chart images
+│
+└── 🖼️ templates/
+    ├── base.html                   #   Base layout (nav, footer, flash)
+    ├── index.html                  #   Patient input forms (tabbed)
+    ├── result.html                 #   Prediction result + explanations
+    ├── report.html                 #   Health report page (NEW)
+    └── dashboard.html              #   Doctor dashboard
 ```
 
 ---
 
-## 📡 API Endpoints
+## 📚 Datasets
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/` | GET | Homepage with prediction forms |
-| `/predict` | POST | Submit prediction (form data) |
-| `/result/<id>` | GET | View prediction result |
-| `/dashboard` | GET | Doctor dashboard |
-| `/api/stats` | GET | JSON statistics |
-| `/api/predict` | POST | REST API prediction (JSON) |
-| `/api/whatif` | POST | What-If Analysis |
-| `/export/csv` | GET | Download CSV export |
+| Disease | Source | Samples | Features | Target |
+|:--------|:-------|:-------:|:--------:|:-------|
+| 🩸 Diabetes | Pima Indians (NIDDK) | 768 | 8 | Binary (Diabetic / Not) |
+| ❤️ Heart Disease | Cleveland UCI | 303 | 13 | Binary (Disease / No Disease) |
+| 🫘 Kidney Disease | UCI CKD | 400 | 18 | Binary (CKD / Not CKD) |
+| 🫀 Liver Disease | Indian Liver Patient (UCI) | 583 | 10 | Binary (Disease / No Disease) |
+
+All datasets are auto-downloaded and preprocessed by `core/download_datasets.py`. Models are trained with **XGBoost** + **SMOTE** oversampling for class balance.
 
 ---
 
-## 📚 Dataset Sources
+## 🔮 Roadmap
 
-| Disease | Dataset | Samples | Features |
-|---------|---------|---------|----------|
-| Diabetes | Pima Indians Diabetes | 768 | 8 |
-| Heart Disease | Cleveland Heart Disease (UCI) | 303 | 13 |
-| Kidney Disease | Chronic Kidney Disease (UCI) | 400 | 18 |
-| Liver Disease | Indian Liver Patient (UCI) | 583 | 10 |
-
----
-
-## 🔮 Future Improvements
-
-- [ ] PDF report generation with ReportLab
+- [x] Multi-disease prediction with XGBoost
+- [x] SHAP waterfall charts
+- [x] LIME text explanations
+- [x] Doctor dashboard with Plotly charts
+- [x] What-If analysis
+- [x] REST API endpoints
+- [x] CSV export
+- [x] Patient Health Report with normal ranges *(NEW)*
 - [ ] Doctor authentication with Flask-Login
 - [ ] Patient risk score combining multiple disease predictions
 - [ ] Time-series tracking for recurring patients
 - [ ] Deployment to Render / Railway with Docker
-- [ ] More disease models (lung cancer, Parkinson's, etc.)
+- [ ] More disease models (lung cancer, Parkinson's, stroke)
 - [ ] Medical image analysis integration
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Here's how:
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
+4. **Push** to the branch (`git push origin feature/amazing-feature`)
+5. **Open** a Pull Request
 
 ---
 
 ## ⚠️ Disclaimer
 
-This system is for **research and educational purposes only**. It should not be used as a substitute for professional medical diagnosis. Always consult a qualified healthcare provider for medical decisions.
+> **This system is for research and educational purposes only.**
+> It should not be used as a substitute for professional medical diagnosis, advice, or treatment.
+> Always consult a qualified healthcare provider for medical decisions.
 
 ---
 
 ## 📄 License
 
-MIT License — see [LICENSE](LICENSE) for details.
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+---
+
+<p align="center">
+  Made with ❤️ by <a href="https://github.com/dheeraj0677">Dheeraj</a>
+</p>
+
+<p align="center">
+  <sub>🧬 MedPredict AI — Where AI meets transparency in healthcare</sub>
+</p>
