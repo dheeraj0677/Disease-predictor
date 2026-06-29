@@ -42,8 +42,6 @@ MedPredict AI is a **full-stack disease prediction system** that doesn't just te
 ### 🤖 Prediction Engine
 - **4 Disease Models** — Diabetes, Heart, Kidney, Liver
 - **XGBoost** classifier with SMOTE balancing
-- **Confidence scoring** with animated progress ring
-- **Risk stratification** — Low / Medium / High
 
 </td>
 <td width="50%">
@@ -51,8 +49,6 @@ MedPredict AI is a **full-stack disease prediction system** that doesn't just te
 ### 📊 Explainable AI
 - **SHAP waterfall plots** — feature-level contributions
 - **LIME text explanations** — human-readable insights
-- **What-If Analysis** — adjust values, see changes live
-- **Full transparency** — no black-box predictions
 
 </td>
 </tr>
@@ -62,8 +58,7 @@ MedPredict AI is a **full-stack disease prediction system** that doesn't just te
 ### 📄 Health Reports *(NEW)*
 - **Normal range comparison** with color-coded status bars
 - **Radar chart** health profile visualization
-- **Personalized recommendations** based on lab values
-- **Print/PDF export** with optimized print styles
+
 
 </td>
 <td width="50%">
@@ -72,7 +67,7 @@ MedPredict AI is a **full-stack disease prediction system** that doesn't just te
 - **Historical predictions** with filters & search
 - **Interactive Plotly charts** — disease & risk distribution
 - **CSV export** for data analysis
-- **REST API** for hospital system integration
+
 
 </td>
 </tr>
@@ -85,8 +80,7 @@ MedPredict AI is a **full-stack disease prediction system** that doesn't just te
 | 🎨 **Premium Dark UI** | Glassmorphism design with floating orbs, micro-animations, and gradient accents |
 | 📱 **Fully Responsive** | Works on desktop, tablet, and mobile |
 | 🔒 **Secure** | Flask secret key, input validation, error handling |
-| ⚡ **Fast** | Predictions in < 1 second, optimized model loading |
-| 🖨️ **Print Ready** | Health reports with `@media print` styles for PDF generation |
+
 
 ---
 
