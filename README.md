@@ -130,8 +130,6 @@ MedPredict AI is a **full-stack disease prediction system** that doesn't just te
 | **Explainability** | SHAP (Shapley values), LIME (local surrogate models) |
 | **Database** | SQLite with indexed queries |
 | **Frontend** | HTML5, CSS3 (custom design system), Vanilla JS |
-| **Visualization** | Plotly.js (dashboard), Chart.js (radar), Matplotlib (SHAP/LIME) |
-| **Data** | Pandas, NumPy, Joblib |
 
 ---
 
@@ -192,8 +190,7 @@ The **Patient Health Report** is a comprehensive medical summary page available 
 | **📊 Lab Values vs Normal Ranges** | Color-coded comparison bars (🟢 Normal · 🟡 Borderline · 🔴 Abnormal) |
 | **🎯 Health Profile Radar** | Interactive Chart.js radar chart comparing patient values to normal upper bounds |
 | **💡 Personalized Recommendations** | Auto-generated health advice based on which values are outside normal range |
-| **📋 Report Summary** | Count of parameters analyzed, normal, borderline, and abnormal values |
-| **🖨️ Print / PDF** | Optimized print stylesheet — click "Print" to save as PDF |
+
 
 > Every recommendation is severity-sorted (🔴 High → 🟡 Medium → 🟢 Low → 🔵 Info) and includes medically-informed actionable guidance.
 
@@ -241,7 +238,6 @@ This makes AI decisions understandable even for non-technical medical staff.
 | `/result/<id>` | `GET` | 📋 Prediction result with SHAP + LIME |
 | `/report/<id>` | `GET` | 📄 Comprehensive health report *(NEW)* |
 | `/dashboard` | `GET` | 📊 Doctor dashboard with analytics |
-| `/export/csv` | `GET` | 📥 Download all predictions as CSV |
 
 ### REST API Endpoints
 
@@ -249,7 +245,6 @@ This makes AI decisions understandable even for non-technical medical staff.
 |:---------|:-------|:------------|
 | `/api/predict` | `POST` | JSON prediction for integrations |
 | `/api/whatif` | `POST` | What-If analysis (adjust & re-predict) |
-| `/api/stats` | `GET` | Dashboard statistics as JSON |
 
 <details>
 <summary><strong>📝 API Usage Example</strong></summary>
